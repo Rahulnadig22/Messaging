@@ -7,4 +7,6 @@
     <string name="username">Username</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="sign_up">Sign Up</string>
+    <string name="type_message_here">Type message Here</string>
+    <string name="todo">TODO</string>
 </resources>

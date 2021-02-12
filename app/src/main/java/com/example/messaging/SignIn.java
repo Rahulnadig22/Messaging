@@ -5,6 +5,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,6 +25,9 @@ public class SignIn extends AppCompatActivity {
     private EditText mRegEmail;
     private EditText mRegPassword;
     private EditText mConfirmPassword;
+
+    public static String CHAT_PREFS = "ChatPrefs";
+    public static String DISPLAY_NAME_KEY = "username";
 
     private FirebaseAuth mAuth;
 
@@ -59,8 +65,26 @@ public class SignIn extends AppCompatActivity {
 
                 if(!task.isSuccessful()){
                     Log.d("Chat","user creation failed");
+                    showErrorDialog("Registration Failed");
+                }else {
+                    saveDisplayName();
+                    Intent intent = new Intent(SignIn.this,MainActivity.class);
+                    finish();
+                    startActivity(intent);
                 }
             }
         });
     }
+
+    private void saveDisplayName(){
+        String displayName = mUsername.getText().toString();
+        SharedPreferences preferences = getSharedPreferences(CHAT_PREFS,0);
+        preferences.edit().putString(DISPLAY_NAME_KEY,displayName).apply();
+    }
+
+    private void showErrorDialog(String message){
+        new AlertDialog.Builder(this).setTitle("Oops").setMessage(message).setPositiveButton(android.R.string.ok,null)
+                .setIcon(android.R.drawable.ic_dialog_alert).show();
+    }
+
 }
